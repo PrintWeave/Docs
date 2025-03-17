@@ -1,3 +1,13 @@
 # Table of contents
 
-* [Page](README.md)
+* [PrintWeave](README.md)
+
+## Setup
+
+* [Install](setup/install.md)
+
+## API
+
+* [Rest Api](api/rest-api/README.md)
+  * [Authentication](api/rest-api/authentication.md)
+* [Websockets](api/websockets.md)
