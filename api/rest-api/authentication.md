@@ -1,10 +1,12 @@
 # Authentication
 
-{% openapi src="../../.gitbook/assets/auth.json" path="/register" method="post" %}
-[auth.json](../../.gitbook/assets/auth.json)
+We use JWT tokens to authenticate, when you run `printweave configure` it will ask you to create a admin user.
+
+{% openapi src="../../.gitbook/assets/openapi.json" path="/login" method="post" %}
+[openapi.json](../../.gitbook/assets/openapi.json)
 {% endopenapi %}
 
-{% openapi src="../../.gitbook/assets/auth.json" path="/login" method="post" %}
-[auth.json](../../.gitbook/assets/auth.json)
+{% openapi src="../../.gitbook/assets/openapi.json" path="/register" method="post" %}
+[openapi.json](../../.gitbook/assets/openapi.json)
 {% endopenapi %}
 

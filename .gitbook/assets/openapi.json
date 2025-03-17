@@ -1,0 +1,543 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "PrintWeave API",
+      "version": "0.2.0"
+    },
+    "paths": {
+      "/register": {
+        "post": {
+          "summary": "Register a new user",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "example": "johndoe"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "password123"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "johndoe@example.com"
+                    }
+                  },
+                  "required": [
+                    "username",
+                    "password",
+                    "email"
+                  ]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "User created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "User created successfully"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Username, password and email are required"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Registration failed",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Registration failed"
+                      },
+                      "error": {
+                        "type": "string",
+                        "example": "Unknown error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/login": {
+        "post": {
+          "summary": "Login a user",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "example": "johndoe"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "password123"
+                    }
+                  },
+                  "required": [
+                    "username",
+                    "password"
+                  ]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Authentication successful",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Authentication successful"
+                      },
+                      "token": {
+                        "type": "string",
+                        "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                      },
+                      "raw": {
+                        "type": "string",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Username and password are required"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Authentication failed",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Authentication failed"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Login failed",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Login failed"
+                      },
+                      "error": {
+                        "type": "string",
+                        "example": "Unknown error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/printer": {
+        "get": {
+          "summary": "Get all printers for the authenticated user",
+          "responses": {
+            "200": {
+              "description": "A list of printers",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "user": {
+                        "$ref": "#/components/schemas/User"
+                      },
+                      "printers": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Printer"
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "example-1": {
+                      "summary": "Example response",
+                      "value": {
+                        "user": {
+                          "id": 1,
+                          "username": "johndoe",
+                          "email": "johndoe@example.com",
+                          "role": "user",
+                          "active": true
+                        },
+                        "printers": [
+                          {
+                            "id": 1,
+                            "name": "Printer1",
+                            "type": "bambu",
+                            "active": true
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SimpleUnauthorizedError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new printer",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Printer1"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "bambu"
+                    },
+                    "bambu": {
+                      "type": "object",
+                      "properties": {
+                        "ip": {
+                          "type": "string",
+                          "example": "192.168.1.100"
+                        },
+                        "code": {
+                          "type": "string",
+                          "example": "ABC123"
+                        },
+                        "serial": {
+                          "type": "string",
+                          "example": "SN123456"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "type"
+                  ]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Printer created",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Printer created"
+                      },
+                      "printer": {
+                        "$ref": "#/components/schemas/Printer"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CreatePrinterError"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SimpleUnauthorizedError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/printer/{printerId}": {
+        "delete": {
+          "summary": "Delete a printer",
+          "parameters": [
+            {
+              "name": "printerId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Printer removed",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Printer removed"
+                      },
+                      "printer": {
+                        "$ref": "#/components/schemas/Printer"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SimpleUnauthorizedError"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RemovePrinterError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "username": {
+              "type": "string",
+              "example": "johndoe"
+            },
+            "email": {
+              "type": "string",
+              "example": "johndoe@example.com"
+            },
+            "role": {
+              "type": "string",
+              "enum": ["user", "admin"],
+              "example": "user"
+            },
+            "active": {
+              "type": "boolean",
+              "example": true
+            },
+            "printers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Printer"
+              }
+            }
+          }
+        },
+        "Printer": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "name": {
+              "type": "string",
+              "example": "Printer1"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["bambu", "other"],
+              "example": "bambu"
+            },
+            "active": {
+              "type": "boolean",
+              "example": true
+            },
+            "userPrinter": {
+              "$ref": "#/components/schemas/UserPrinter"
+            }
+          }
+        },
+        "UserPrinter": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer",
+              "example": 1
+            },
+            "printerId": {
+              "type": "integer",
+              "example": 1
+            },
+            "permission": {
+              "type": "string",
+              "enum": ["view", "operate", "admin"],
+              "example": "admin"
+            },
+            "user": {
+              "$ref": "#/components/schemas/User"
+            },
+            "printer": {
+              "$ref": "#/components/schemas/Printer"
+            }
+          }
+        },
+        "SimpleUnauthorizedError": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "example": 401
+            },
+            "message": {
+              "type": "string",
+              "example": "Unauthorized"
+            }
+          }
+        },
+        "CreatePrinterError": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "example": 400
+            },
+            "message": {
+              "type": "string",
+              "example": "Name and type are required"
+            }
+          }
+        },
+        "RemovePrinterError": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "example": 404
+            },
+            "message": {
+              "type": "string",
+              "example": "Printer not found"
+            }
+          }
+        },
+        "JwtPayload": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "Bearer 12345"
+            },
+            "username": {
+              "type": "string",
+              "example": "johndoe"
+            }
+          }
+        }
+      }
+    }
+  }
